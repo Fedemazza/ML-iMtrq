@@ -50,19 +50,18 @@ with st.sidebar:
     
     Año = st.number_input('Año de la campaña',value=2023)
     Mes = st.number_input('Mes de la campaña',value=11, max_value=12)
-    Cost = st.number_input('Costo de la campaña',value=750)
+    Cost = st.number_input('Costo de la campaña',value=300)
     Objective = st.selectbox(    'Objetivo',    (['Purchase','Fans','Reach', 'Traffic', 'Category', 'Awareness','Product', 'Consideration',
                                                   'Conversion', 'Views','Landing Page Views', 'NoObjective', 'Discovery', 'Impressions','Clicks', 'Conversions', 'Whatsapp']))
-    Country = st.selectbox(    'Country',    (['Mexico', 'Chile', 'Colombia', 'Perú', 'Ecuador', 'Argentina','USA']))
-    Media_type = st.selectbox(    'Media_type',    (['Social', 'Unknown', 'Search', 'Display']))
-    Traffic_source = st.selectbox(    'Traffic_source',    (['Facebook', 'Google', 'Other', 'LinkedIn']))
+    Country = st.selectbox(    'Country',    (['USA','Mexico', 'Chile', 'Colombia', 'Perú', 'Ecuador', 'Argentina']))
+    Media_type = st.selectbox(    'Media_type',    (['Search','Social', 'Unknown', 'Display']))
+    Traffic_source = st.selectbox(    'Traffic_source',    (['Google','Facebook',  'Other', 'LinkedIn']))
     Client = st.selectbox(    'Client',    (['Hughesnet', 'Braun', 'Enterprise', 'QuickQuack', 'ChefJames','OldGlory', 'AOV']))
     Format_New = st.selectbox(    'Format_New',    (['Display', 'Video']))
-    Platform = st.selectbox(    'Platform',    (['Facebook&Instagram', 'Discovery', 'Facebook', 'Performance Max','NoPlatform', 'Search', 'Facebook & Instagram', 'Programmatic',
-                                                 'Google Ads', 'Google Ads Search', 'LinkedIn','Google Ads Display', 'Google Ads  PMAX']))
-    Strategy = st.selectbox(    'Strategy',    (['Awareness', 'Conversion', 'Consideration', 'Views', 'NoStrategy']))
-    Plataforma = st.selectbox(    'Plataforma',    (['Meta', 'Google Ads', 'External Source', 'NoPlataforma']))
-    Campaign_Type = st.selectbox(    'Campaign_Type',    (['PAGE_LIKES', 'DISCOVERY', 'OUTCOME_LEADS', 'CONVERSIONS','LINK_CLICKS', 'PERFORMANCE_MAX', 'SEARCH', 'OUTCOME_AWARENESS',
+    Platform = st.selectbox(    'Platform',    (['Google Ads','Search','Facebook&Instagram', 'Discovery', 'Facebook', 'Performance Max','NoPlatform',  'Facebook & Instagram', 'Programmatic','Google Ads Search', 'LinkedIn','Google Ads Display', 'Google Ads  PMAX']))
+    Strategy = st.selectbox(    'Strategy',    (['Consideration','Awareness', 'Conversion',  'Views', 'NoStrategy']))
+    Plataforma = st.selectbox(    'Plataforma',    (['Google Ads','Meta',  'External Source', 'NoPlataforma']))
+    Campaign_Type = st.selectbox(    'Campaign_Type',    (['SEARCH','PAGE_LIKES', 'DISCOVERY', 'OUTCOME_LEADS', 'CONVERSIONS','LINK_CLICKS', 'PERFORMANCE_MAX',  'OUTCOME_AWARENESS',
                                                            'REACH', 'OUTCOME_SALES', 'NoType', 'DISPLAY','OUTCOME_ENGAGEMENT']))
     Ecommerce = st.selectbox(    'Ecommerce',    (['Si','No']))
     Service_Product = st.selectbox(    'Service_Product',    (['Serv','Prod']))
