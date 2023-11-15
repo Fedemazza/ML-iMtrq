@@ -3,6 +3,7 @@ import xgboost as xgb
 import pandas as pd
 import joblib
 import numpy as np
+import altair as alt
 
 st.title('Uso del modelo')
 
@@ -23,6 +24,20 @@ rf_CPV = joblib.load("model_rf_CPV.joblib")
 loaded_scaler = joblib.load('scaler_model.joblib')
 # Cargar el pca desde el archivo
 loaded_pca = joblib.load('pca_model.joblib')
+
+# Cargar el scaler desde el archivo
+loaded_scaler_CPV = joblib.load('scaler_model_CPV.joblib')
+# Cargar el pca desde el archivo
+loaded_pca_CPV = joblib.load('pca_model_CPV.joblib')
+
+def load_data(df_in):
+    df = pd.read_csv(df_in+'.csv')
+    df = df.drop("Unnamed: 0", axis=1)
+    return df
+
+# Cargar los datos
+df = load_data('df_histo')
+
 
 variables_modelo = xgboost_CPC.feature_names_in_
 all_features = ['Año','Mes', 'Objective', 'Cost', 'Country', 'Media_type', 'Traffic_source', 'Client','Format_New','Platform','Strategy','Plataforma','Campaign_Type','Ecommerce','Service_Product','Semanas_Antiguedad']
@@ -93,6 +108,7 @@ with st.sidebar:
 def prediccion_modelo(modelo,X):
     return modelo.predict(X)
 
+bin_density = st.slider('Bins', min_value=250, max_value=350, step=5, value=300)
 
 st.button("Reset", type="primary")
 if st.button('Hacer predicción'):
@@ -105,21 +121,55 @@ if st.button('Hacer predicción'):
         if col not in X.columns:
             X[col] = False  # Agregar la columna faltante con valores predeterminados si es necesario
             print(col)
+
+    
+    
+    X_Scaled = loaded_scaler_CPV.transform(X[['Año','Mes','Cost']])
+    X_pca = loaded_pca_CPV.transform(X_Scaled)
+    X_pca = pd.DataFrame(X_pca)
+    X['X_pca_0'] = X_pca[0]
+    X['X_pca_1'] = X_pca[1]
     
     X = X[rf_CPV.feature_names_in_]
     X.columns = [str(i) for i in X.columns]
+
+    
     
     pred_CPV = prediccion_modelo(rf_CPV,X)[0]
 
+    def histo(df,metrica,valor,bins=bin_density):
+        chart = alt.Chart(df).mark_bar(
+        opacity=0.3,
+        binSpacing=0
+    ).encode(
+        alt.X(metrica+':Q').bin(maxbins=bin_density),
+        alt.Y('count()').stack(None),            
+    ).properties(
+            width=1000,
+            height=600
+        ).interactive()
+
+        linea_valor = alt.Chart(pd.DataFrame({'valor_linea': [valor]})).mark_rule(color='red').encode(
+    x='valor_linea:Q',
+    size=alt.value(2)  # Grosor de la línea
+)
+        return chart + linea_valor
+    
     st.write('CPC')
     st.write(round(pred_CPC,3))
+    st.altair_chart(histo(df,'CPC',pred_CPC), use_container_width=False, theme=None)
+    
     st.write('CPM')
     st.write(round(pred_CPM,3))
+    st.altair_chart(histo(df,'CPM',pred_CPM), use_container_width=False, theme=None)
+    
     st.write('CTR')
     st.write(round(pred_CTR,3))
+    st.altair_chart(histo(df,'CTR',pred_CTR), use_container_width=False, theme=None)
+    
     st.write('CPV')
     st.write(round(pred_CPV,3))
-    
+    st.altair_chart(histo(df,'CPV',pred_CPV,bins=bin_density*5), use_container_width=False, theme=None)
     
 else:
     st.write('Prepara tu predicción')
